@@ -5,7 +5,8 @@ from flask import Flask, render_template, session
 from bs4 import BeautifulSoup
 
 APP = Flask(__name__)
-URL = "http://talkobamato.me/synthesize.py"
+#URL = "http://talkobamato.me/synthesize.py"
+URL = "http://hidden-journey-62459.herokuapp.com"
 
 def get_fact():
 
@@ -20,12 +21,10 @@ def get_fact():
 @APP.route('/')
 def home():
     fact = get_fact()
-    resp = requests.post(URL,
+    resp = requests.post("{}/piglatinize/".format(URL),
                          data={"input_text": fact},
                          allow_redirects=False)
-    soup = BeautifulSoup(resp.content, "html.parser")
-    link = soup.find_all("a")
-    href = link[0]["href"]
+    href = resp.headers.get("Location")
 
     return render_template('obama.jinja2', href=href)
 
